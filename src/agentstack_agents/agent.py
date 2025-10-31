@@ -7,14 +7,14 @@ import sys
 import inspect
 from typing import Annotated, Callable
 from a2a.types import Message
-from beeai_sdk.a2a.types import AgentMessage
-from beeai_sdk.server import Server
-from beeai_sdk.a2a.extensions import (
+from agentstack_sdk.a2a.types import AgentMessage
+from agentstack_sdk.server import Server
+from agentstack_sdk.a2a.extensions import (
     LLMServiceExtensionServer, LLMServiceExtensionSpec,
     TrajectoryExtensionServer, TrajectoryExtensionSpec,
     AgentDetail
 )
-from beeai_sdk.a2a.extensions.ui.form import (
+from agentstack_sdk.a2a.extensions.ui.form import (
     FormExtensionServer, FormExtensionSpec, FormRender, TextField
 )
 from mellea import MelleaSession, start_session

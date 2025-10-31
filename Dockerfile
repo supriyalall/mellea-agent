@@ -15,7 +15,7 @@ FROM base AS builder
 COPY . /app/
 
 RUN uv --no-managed-python sync --no-dev --no-cache --locked && \
-    uv --no-managed-python add --no-cache --locked beeai-sdk
+    uv --no-managed-python add --no-cache --locked agentstack-sdk
 # Run
 FROM base AS runner
 
