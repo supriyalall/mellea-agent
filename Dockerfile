@@ -1,16 +1,28 @@
-FROM python:3.13-slim-trixie
-COPY --from=ghcr.io/astral-sh/uv:0.7.15 /uv /bin/
+# Base
+FROM registry.access.redhat.com/ubi10/python-312-minimal AS base
 
-ENV UV_LINK_MODE=copy \
-    PRODUCTION_MODE=true
-
-ADD . /app
 WORKDIR /app
+USER root
 
-RUN uv sync --no-cache --locked --link-mode copy
-
-ENV PRODUCTION_MODE=True \
-    PATH="/app/.venv/bin:$PATH" \
+ENV PATH="/app/.venv/bin:$PATH" \
     HOME=/tmp
 
-CMD ["uv", "run", "--no-sync", "server"]
+COPY --from=ghcr.io/astral-sh/uv:0.9.6 /uv /bin/
+
+# Build
+FROM base AS builder
+
+COPY . /app/
+
+RUN uv --no-managed-python sync --no-dev --no-cache --locked && \
+    uv --no-managed-python add --no-cache --locked beeai-sdk
+# Run
+FROM base AS runner
+
+USER 1001
+
+COPY --from=builder --chown=1001:1001 /app/.venv /app/.venv
+COPY --from=builder --chown=1001:1001 /app/pyproject.toml /app/pyproject.toml
+COPY --from=builder --chown=1001:1001 /app/src/agentstack_agents/agent.py /app/agent.py
+
+CMD ["uv", "run", "--no-sync", "--with", "mellea", "agent.py"]
