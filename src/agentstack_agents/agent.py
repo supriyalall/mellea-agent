@@ -46,23 +46,21 @@ def bee_app(func: Callable) -> Callable:
      form_extension_spec = FormExtensionSpec(form_render)
 
 
-     @server.agent(name="Mellea Agent", detail=AgentDetail(interaction_mode="single-turn", author={"name": "Mellea Team"}, source_code_url="https://github.com/supriyalall/mellea/tree/main"), description="BeeAI Agent with Mellea backend")
-
-     async def wrapper(input: Message,
+     #@server.agent(name="Mellea Agent", detail=AgentDetail(interaction_mode="single-turn", author={"name": "Mellea Team"}, source_code_url="https://github.com/supriyalall/mellea/tree/main"), description="BeeAI Agent with Mellea backend")
+     @server.agent()
+     async def mellea_agent(input: Message,
                      llm: Annotated[LLMServiceExtensionServer, LLMServiceExtensionSpec.single_demand()],
                      trajectory: Annotated[TrajectoryExtensionServer, TrajectoryExtensionSpec()],
                      form: Annotated[FormExtensionServer,
                                      form_extension_spec]):
-
-
+        """BeeAI Agent with Mellea Backend -- Email Writer Example"""
+        
         form_data = form.parse_form_response(message=input)
         inputs = [form_data.values[key].value for key in form_data.values] # Extracting all of the user inputs from the form
         llm_config = llm.data.llm_fulfillments.get("default")
 
         for i in range(2): #Fixed loop budget to two iterations
-            yield trajectory.trajectory_metadata(
-            title=f"Attempt {i + 1}/2",
-            content=f"Generating message...")
+            yield trajectory.trajectory_metadata(title=f"Attempt {i + 1}/2", content=f"Generating message...")
             m = MelleaSession(OpenAIBackend(
                 model_id=llm_config.api_model,
                 api_key=llm_config.api_key,
