@@ -88,10 +88,10 @@ def bee_app(func: Callable) -> Callable:
 
 
 
-def main():
+def run():
     # Mellea program shown below!
     @bee_app
-    def mellea_func(m: MelleaSession, sender: str, recipient, subject: str, topic: str, sampling_iters : int = 3) -> tuple[ModelOutputThunk, Context] | SamplingResult:
+    def melleaß_func(m: MelleaSession, sender: str, recipient, subject: str, topic: str, sampling_iters : int = 3) -> tuple[ModelOutputThunk, Context] | SamplingResult:
         """
         Example email writing module that utilizes an IVR loop in Mellea to generate an email with a specific list of requirements.
         Inputs:
@@ -114,4 +114,4 @@ def main():
         return sampling
 
 if __name__ == "__main__":
-    main()
+    run()
