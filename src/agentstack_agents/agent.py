@@ -79,6 +79,8 @@ def bee_app(func: Callable) -> Callable:
             status = "\n".join(f"{'✓' if bool(v) else '✗'} {getattr(r, 'description', str(r))}" for r, v in validations)
             yield trajectory.trajectory_metadata(title=f"✗ Attempt {i + 1} failed", content=status)
 
+
+        yield trajectory.trajectory_metadata(title=f"All sampling failed. Returning last result.")
         yield AgentMessage(text=sampling.value)
 
      server.run(host=os.getenv("HOST", "127.0.0.1"), port=int(os.getenv("PORT", 8000)))
